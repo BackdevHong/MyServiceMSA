@@ -1,30 +1,35 @@
 plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
-    kotlin("plugin.jpa")
 
     id("org.springframework.boot")
     id("io.spring.dependency-management")
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-graphql")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation(
+        "org.springframework.boot:spring-boot-starter-amqp",
+    )
 
-    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation(
+        "com.fasterxml.jackson.module:jackson-module-kotlin",
+    )
 
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    runtimeOnly("com.h2database:h2")
+    implementation(
+        "org.jetbrains.kotlin:kotlin-reflect",
+    )
 
-    implementation("org.springframework.boot:spring-boot-starter-amqp")
+    testImplementation(
+        "org.springframework.boot:spring-boot-starter-test",
+    )
 
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    testImplementation(
+        "org.springframework.amqp:spring-rabbit-test",
+    )
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.graphql:spring-graphql-test")
-    testImplementation("org.springframework.amqp:spring-rabbit-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly(
+        "org.junit.platform:junit-platform-launcher",
+    )
 }
 
 kotlin {
