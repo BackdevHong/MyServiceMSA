@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 class CreateUserServiceTest {
     @Test
@@ -151,6 +152,16 @@ class CreateUserServiceTest {
             savedUsers.add(user)
 
             return user
+        }
+
+        override fun findById(id: UUID): User? {
+            return savedUsers.find { user ->
+                user.id == id
+            }
+        }
+
+        override fun findAll(): List<User> {
+            return savedUsers.toList()
         }
     }
 

@@ -7,6 +7,7 @@ import com.zeronsoftn.honginsung.userservice.domain.model.User
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.util.Optional
 import java.util.UUID
 
 class UserPersistenceAdapterTest {
@@ -88,6 +89,18 @@ class UserPersistenceAdapterTest {
             checkedEmail = email
 
             return existingEmails.contains(email)
+        }
+
+        override fun findById(id: UUID): Optional<UserJpaEntity> {
+            val entity = savedEntities.find { userEntity ->
+                userEntity.toDomain().id == id
+            }
+
+            return Optional.ofNullable(entity)
+        }
+
+        override fun findAll(): List<UserJpaEntity> {
+            return savedEntities.toList()
         }
     }
 }
