@@ -7,9 +7,11 @@ import com.zeronsoftn.honginsung.userservice.application.port.output.UserReposit
 import com.zeronsoftn.honginsung.userservice.domain.event.UserCreatedDomainEvent
 import com.zeronsoftn.honginsung.userservice.domain.exception.DuplicateEmailException
 import com.zeronsoftn.honginsung.userservice.domain.model.User
+import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-open class CreateUserService(
+@Service
+class CreateUserService(
     private val userRepositoryPort: UserRepositoryPort,
     private val userCreatedEventPublisherPort: UserCreatedEventPublisherPort,
 ) : CreateUserUseCase {
