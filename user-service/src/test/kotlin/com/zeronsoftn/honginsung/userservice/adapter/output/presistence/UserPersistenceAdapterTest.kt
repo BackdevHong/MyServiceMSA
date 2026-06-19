@@ -7,6 +7,7 @@ import com.zeronsoftn.honginsung.userservice.domain.model.User
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNull
 import java.util.Optional
 import java.util.UUID
 
@@ -67,6 +68,104 @@ class UserPersistenceAdapterTest {
             "hong@example.com",
             repository.checkedEmail,
         )
+    }
+
+    @Test
+    fun findUserByIdTest() {
+        // given
+        val userId = UUID.fromString(
+            "14b70b0e-b7d8-4a44-bb3c-c9d87bbb13bb",
+        )
+
+        val repository = FakeSpringDataUserRepository()
+
+        repository.save(
+            UserJpaEntity.from(
+                User.restore(
+                    id = userId,
+                    name = "홍길동",
+                    email = "hong@example.com",
+                ),
+            ),
+        )
+
+        val adapter = UserPersistenceAdapter(
+            springDataUserRepository = repository,
+        )
+
+        // when
+        val result = adapter.findById(userId)
+
+        // then
+        assertEquals(userId, result?.id)
+        assertEquals("홍길동", result?.name)
+        assertEquals("hong@example.com", result?.email)
+    }
+
+    @Test
+    fun missingUserTest() {
+        // given
+        val repository = FakeSpringDataUserRepository()
+
+        val adapter = UserPersistenceAdapter(
+            springDataUserRepository = repository,
+        )
+
+        val missingUserId = UUID.fromString(
+            "11111111-1111-1111-1111-111111111111",
+        )
+
+        // when
+        val result = adapter.findById(missingUserId)
+
+        // then
+        assertNull(result)
+    }
+
+    @Test
+    fun findAllUsersTest() {
+        // given
+        val repository = FakeSpringDataUserRepository()
+
+        repository.save(
+            UserJpaEntity.from(
+                User.restore(
+                    id = UUID.fromString(
+                        "14b70b0e-b7d8-4a44-bb3c-c9d87bbb13bb",
+                    ),
+                    name = "홍길동",
+                    email = "hong@example.com",
+                ),
+            ),
+        )
+
+        repository.save(
+            UserJpaEntity.from(
+                User.restore(
+                    id = UUID.fromString(
+                        "530c167b-98f4-4af2-a23a-f2d96aa4bedd",
+                    ),
+                    name = "김철수",
+                    email = "kim@example.com",
+                ),
+            ),
+        )
+
+        val adapter = UserPersistenceAdapter(
+            springDataUserRepository = repository,
+        )
+
+        // when
+        val result = adapter.findAll()
+
+        // then
+        assertEquals(2, result.size)
+
+        assertEquals("홍길동", result[0].name)
+        assertEquals("hong@example.com", result[0].email)
+
+        assertEquals("김철수", result[1].name)
+        assertEquals("kim@example.com", result[1].email)
     }
 
     private class FakeSpringDataUserRepository(
