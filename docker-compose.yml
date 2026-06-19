@@ -1,0 +1,25 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4.3.2-management
+    container_name: myservice-rabbitmq
+    hostname: myservice-rabbitmq
+
+    environment:
+      RABBITMQ_DEFAULT_USER: myservice
+      RABBITMQ_DEFAULT_PASS: myservice1234
+
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  rabbitmq_data:
