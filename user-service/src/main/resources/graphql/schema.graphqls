@@ -1,5 +1,6 @@
 type Query {
-    health: String!
+    user(id: ID!): User
+    users: [User!]!
 }
 
 type Mutation {
